@@ -10,6 +10,24 @@ namespace MathLibrary {
 
 		float x, y, z;
 
+		Vector3() {}
+
+		Vector3(float XX, float YY, float ZZ) {
+		
+			x = XX;
+			y = YY;
+			z = ZZ;
+		
+		}
+
+		Vector3(const Vector3& Copy) {
+
+			x = Copy.x;
+			y = Copy.y;
+			z = Copy.z;
+
+		}
+
 		Vector3 operator+(const Vector3& op) {
 
 			Vector3 temp;
@@ -134,11 +152,11 @@ namespace MathLibrary {
 		bool operator<(const Vector3& op) {
 
 			Vector3 temp1 = *this;
-			temp1 *= *this;
+			temp1 *= temp1;
 			float mag1 = (temp1.x + temp1.y + temp1.z);        // Gets the XYZ values squared and added. The two magnitudes don't need to be
 															   // square-rooted back down because they are BOTH squared, their relationship
 			Vector3 temp2 = op;                                // to eachother will be the same no matter what i multiply or divide them by.
-			temp2 *= op;
+			temp2 *= temp2;
 			float mag2 = (temp2.x + temp2.y + temp2.z);
 
 			return (mag1 < mag2);
@@ -316,6 +334,8 @@ namespace MathLibrary {
 
 	struct Matrix3 {
 
+		float Matrix[3][3];
+
 	};
 
 }
@@ -365,6 +385,15 @@ int main()
 	Pos3 = {1,1,1};
 	Pos3 /= 5;
 	cout << " /=  5  =  " << Pos3.x << "," << Pos3.y << "," << Pos3.z << endl;
+
+
+
+
+	MathLibrary::Vector3 Pos4 = Pos1;
+	cout << " TEST  =  " << Pos4.x << "," << Pos4.y << "," << Pos4.z << endl;
+
+
+
 
 	Pos3 = {1,1,1};
 	-Pos3;
@@ -442,6 +471,16 @@ int main()
 
 	cout << "Rot1[n]  =" << "  Rot1[0]=" << Rot1[0] << "  Rot1[1]=" << Rot1[1] << "  Rot1[2]=" << Rot1[2] << "  Rot1[3]=" << Rot1[3] << endl;
 
+
+	MathLibrary::Matrix3 Name {0,1,2,3,4,5,6,7,8};
+	size_t M3root = sizeof(Name.Matrix) / sizeof(Name.Matrix[0]);
+	size_t M3square = M3root * M3root;
+
+	for (int i = 0; i < M3square; i++) {
+
+	cout << Name.Matrix[i/M3root][i % M3root] << " this is a test" << endl;
+
+	}
 
 }
 
