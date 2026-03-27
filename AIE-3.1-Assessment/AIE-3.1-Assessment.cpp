@@ -1,6 +1,6 @@
 
 #include <iostream>
-#include <vector>
+#include <string>
 
 using namespace std;
 
@@ -374,14 +374,18 @@ namespace MathLibrary {
 				float m1, m2, m3, m4, m5, m6, m7, m8, m9;
 			};
 			float arr[9];
-			Vector3 vec[3];
 		};
 
 		Matrix3() {
 
 			for (int i = 0; i < 9; i++) {
 
-				arr[i] = 0;
+				if (i == 0 || i == 4 || i == 8) {
+					arr[i] = 1;
+				}
+				else {
+					arr[i] = 0;
+				}
 
 			}
 
@@ -400,7 +404,7 @@ namespace MathLibrary {
 		Matrix3(initializer_list<float> m) {
 			
 			int i = 0;							// This constructor allows the user to specifically declare the value
-			for (int m : m) {					// of each stored float on construction without having to be written as
+			for (float m : m) {					// of each stored float on construction without having to be written as
 				arr[i] = m;						// m1,m2,m3,m4,etc. Still learning how initializer_lists work,
 				i++;
 			}
@@ -471,13 +475,26 @@ namespace MathLibrary {
 }
 
 
-void ReadArray(float Array[], size_t Size) {
+string ReadArray(float Array[], size_t Size) {
 
-	for (int i = 0; i < Size - 1; i++) {
-		cout << Array[i] << ", ";
+	int Root = sqrt(Size);
+
+	string Build = to_string(Array[0]);
+	Build.erase(Build.find_last_not_of("0") + 1, string::npos);				 // Read about this on Stack Overflow, first param is a function for getting the
+	Build.erase(Build.find_last_not_of(".") + 1, string::npos);
+	
+	for (int i = 1; i < Size; i++) {
+		Build += " " + to_string(Array[i]);
+		Build.erase(Build.find_last_not_of("0") + 1, string::npos);
+		Build.erase(Build.find_last_not_of(".") + 1, string::npos);
+
+		if (i % Root == 2 && i != Size - 1) {
+			Build += " |";
+		}
+
 	}
-	cout << Array[Size - 1];
 
+	return Build;
 }
 
 
@@ -487,68 +504,59 @@ int main()
 	// Vector3 tests
 	{
 
-		MathLibrary::Vector3 Pos1{ 1,2,3 };
-		MathLibrary::Vector3 Pos2{ 4,5,6 };
-		MathLibrary::Vector3 Pos3{};
+		MathLibrary::Vector3 Pos1 {1,2,3};
+		MathLibrary::Vector3 Pos2 {4,5,6};
+		MathLibrary::Vector3 Pos3 {};
 
 		Pos3 = Pos1 + Pos2;
-		cout << Pos1.x << "," << Pos1.y << "," << Pos1.z << "  +  " << Pos2.x << "," << Pos2.y << "," << Pos2.z << "  =  " << Pos3.x << "," << Pos3.y << "," << Pos3.z << endl;
+		cout << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  +  " << Pos2.x << " " << Pos2.y << " " << Pos2.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = Pos1 - Pos2;
-		cout << Pos1.x << "," << Pos1.y << "," << Pos1.z << "  -  " << Pos2.x << "," << Pos2.y << "," << Pos2.z << "  =  " << Pos3.x << "," << Pos3.y << "," << Pos3.z << endl;
+		cout << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  -  " << Pos2.x << " " << Pos2.y << " " << Pos2.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = Pos1 * Pos2;
-		cout << Pos1.x << "," << Pos1.y << "," << Pos1.z << "  *  " << Pos2.x << "," << Pos2.y << "," << Pos2.z << "  =  " << Pos3.x << "," << Pos3.y << "," << Pos3.z << endl;
+		cout << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  *  " << Pos2.x << " " << Pos2.y << " " << Pos2.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = Pos1 * 5;
-		cout << Pos1.x << "," << Pos1.y << "," << Pos1.z << "  *  " << "5f" << "  =  " << Pos3.x << "," << Pos3.y << "," << Pos3.z << endl;
+		cout << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  *  " << "5f" << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = Pos1 / 5;
-		cout << Pos1.x << "," << Pos1.y << "," << Pos1.z << "  /  " << "5f" << "  =  " << Pos3.x << "," << Pos3.y << "," << Pos3.z << endl;
+		cout << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  /  " << "5f" << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 
-		cout << "Pos3 from here on will always be set to 1,1,1 before operations." << endl;
+		cout << "\nPos3 from here on will always be set to 1,1,1 before operations.\n" << endl;
 
-		Pos3 = { 1,1,1 };
+		Pos3 = {1,1,1};
 		Pos3 += Pos1;
-		cout << " +=  " << Pos1.x << "," << Pos1.y << "," << Pos1.z << "  =  " << Pos3.x << "," << Pos3.y << "," << Pos3.z << endl;
+		cout << " +=  " << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
-		Pos3 = { 1,1,1 };
+		Pos3 = {1,1,1};
 		Pos3 -= Pos1;
-		cout << " -=  " << Pos1.x << "," << Pos1.y << "," << Pos1.z << "  =  " << Pos3.x << "," << Pos3.y << "," << Pos3.z << endl;
+		cout << " -=  " << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
-		Pos3 = { 1,1,1 };
+		Pos3 = {1,1,1};
 		Pos3 *= Pos1;
-		cout << " *=  " << Pos1.x << "," << Pos1.y << "," << Pos1.z << "  =  " << Pos3.x << "," << Pos3.y << "," << Pos3.z << endl;
+		cout << " *=  " << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
-		Pos3 = { 1,1,1 };
+		Pos3 = {1,1,1};
 		Pos3 *= 5;
-		cout << " *=  5  =  " << Pos3.x << "," << Pos3.y << "," << Pos3.z << endl;
+		cout << " *=  5  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
-		Pos3 = { 1,1,1 };
+		Pos3 = {1,1,1};
 		Pos3 /= 5;
-		cout << " /=  5  =  " << Pos3.x << "," << Pos3.y << "," << Pos3.z << endl;
+		cout << " /=  5  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
-
-
-
-		MathLibrary::Vector3 Pos4 = Pos1;
-		cout << " TEST  =  " << Pos4.x << "," << Pos4.y << "," << Pos4.z << endl;
-
-
-
-
-		Pos3 = { 1,1,1 };
+		Pos3 = {1,1,1};
 		-Pos3;
-		cout << " -Pos  =  " << Pos3.x << "," << Pos3.y << "," << Pos3.z << endl;
+		cout << " -Pos  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
-		Pos3 = { 1,1,1 };
+		Pos3 = {1,1,1};
 		cout << "Pos3  ==  Pos1  =  " << (Pos3 == Pos1) << endl;
 
-		Pos3 = { 1,1,1 };
+		Pos3 = {1,1,1};
 		cout << "Pos3  !=  Pos1  =  " << (Pos3 != Pos1) << endl;
 
-		Pos3 = { 1,1,1 };
+		Pos3 = {1,1,1};
 		cout << "Pos3  <  Pos1  =  " << (Pos3 < Pos1) << endl;
 
 		cout << "Pos1[n]  =" << "  Pos1[0]=" << Pos1[0] << "  Pos1[1]=" << Pos1[1] << "  Pos1[2]=" << Pos1[2] << endl;
@@ -560,59 +568,59 @@ int main()
 	// Vector4 tests
 	{
 
-		MathLibrary::Vector4 Rot1{ 1,2,3,4 };
-		MathLibrary::Vector4 Rot2{ 5,6,7,8 };
-		MathLibrary::Vector4 Rot3{};
+		MathLibrary::Vector4 Rot1 {1,2,3,4};
+		MathLibrary::Vector4 Rot2 {5,6,7,8};
+		MathLibrary::Vector4 Rot3 {};
 
 		Rot3 = Rot1 + Rot2;
-		cout << Rot1.x << "," << Rot1.y << "," << Rot1.z << "," << Rot1.w << "," << "  +  " << Rot2.x << "," << Rot2.y << "," << Rot2.z << "," << Rot2.w << "  =  " << Rot3.x << "," << Rot3.y << "," << Rot3.z << "," << Rot3.w << endl;
+		cout << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  +  " << Rot2.x << " " << Rot2.y << " " << Rot2.z << " " << Rot2.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		
+		Rot3 = Rot1 - Rot2;													 
+		cout << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  -  " << Rot2.x << " " << Rot2.y << " " << Rot2.z << " " << Rot2.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
-		Rot3 = Rot1 - Rot2;
-		cout << Rot1.x << "," << Rot1.y << "," << Rot1.z << "," << Rot1.w << "," << "  -  " << Rot2.x << "," << Rot2.y << "," << Rot2.z << "," << Rot2.w << "  =  " << Rot3.x << "," << Rot3.y << "," << Rot3.z << "," << Rot3.w << endl;
+		Rot3 = Rot1 * Rot2;													 
+		cout << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  *  " << Rot2.x << " " << Rot2.y << " " << Rot2.z << " " << Rot2.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
-		Rot3 = Rot1 * Rot2;
-		cout << Rot1.x << "," << Rot1.y << "," << Rot1.z << "," << Rot1.w << "," << "  *  " << Rot2.x << "," << Rot2.y << "," << Rot2.z << "," << Rot2.w << "  =  " << Rot3.x << "," << Rot3.y << "," << Rot3.z << "," << Rot3.w << endl;
+		Rot3 = Rot1 * 5;													 
+		cout << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  *  " << "5f" << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
-		Rot3 = Rot1 * 5;
-		cout << Rot1.x << "," << Rot1.y << "," << Rot1.z << "," << Rot1.w << "," << "  *  " << "5f" << "  =  " << Rot3.x << "," << Rot3.y << "," << Rot3.z << "," << Rot3.w << endl;
-
-		Rot3 = Rot1 / 5;
-		cout << Rot1.x << "," << Rot1.y << "," << Rot1.z << "," << Rot1.w << "," << "  /  " << "5f" << "  =  " << Rot3.x << "," << Rot3.y << "," << Rot3.z << "," << Rot3.w << endl;
+		Rot3 = Rot1 / 5;													 
+		cout << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  /  " << "5f" << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
 
-		cout << "Rot3 from here on will always be set to 1,1,1,1 before operations." << endl;
+		cout << "\nRot3 from here on will always be set to 1,1,1,1 before operations.\n" << endl;
 
-		Rot3 = { 1,1,1,1 };
+		Rot3 = {1,1,1,1};
 		Rot3 += Rot1;
-		cout << " +=  " << Rot1.x << "," << Rot1.y << "," << Rot1.z << "," << Rot1.w << "  =  " << Rot3.x << "," << Rot3.y << "," << Rot3.z << "," << Rot3.w << endl;
+		cout << " +=  " << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
-		Rot3 = { 1,1,1,1 };
+		Rot3 = {1,1,1,1};
 		Rot3 -= Rot1;
-		cout << " -=  " << Rot1.x << "," << Rot1.y << "," << Rot1.z << "," << Rot1.w << "  =  " << Rot3.x << "," << Rot3.y << "," << Rot3.z << "," << Rot3.w << endl;
+		cout << " -=  " << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
-		Rot3 = { 1,1,1,1 };
+		Rot3 = {1,1,1,1};
 		Rot3 *= Rot1;
-		cout << " *=  " << Rot1.x << "," << Rot1.y << "," << Rot1.z << "," << Rot1.w << "  =  " << Rot3.x << "," << Rot3.y << "," << Rot3.z << "," << Rot3.w << endl;
+		cout << " *=  " << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
-		Rot3 = { 1,1,1,1 };
+		Rot3 = {1,1,1,1};
 		Rot3 *= 5;
-		cout << " *=  5  =  " << Rot3.x << "," << Rot3.y << "," << Rot3.z << "," << Rot3.w << endl;
+		cout << " *=  5  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
-		Rot3 = { 1,1,1,1 };
+		Rot3 = {1,1,1,1};
 		Rot3 /= 5;
-		cout << " /=  5  =  " << Rot3.x << "," << Rot3.y << "," << Rot3.z << "," << Rot3.w << endl;
+		cout << " /=  5  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
-		Rot3 = { 1,1,1,1 };
+		Rot3 = {1,1,1,1};
 		-Rot3;
-		cout << " -Rot  =  " << Rot3.x << "," << Rot3.y << "," << Rot3.z << "," << Rot3.w << endl;
+		cout << " -Rot  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
-		Rot3 = { 1,1,1,1 };
+		Rot3 = {1,1,1,1};
 		cout << "Rot3  ==  Rot1  =  " << (Rot3 == Rot1) << endl;
 
-		Rot3 = { 1,1,1,1 };
+		Rot3 = {1,1,1,1};
 		cout << "Rot3  !=  Rot1  =  " << (Rot3 != Rot1) << endl;
 
-		Rot3 = { 1,1,1,1 };
+		Rot3 = {1,1,1,1};
 		cout << "Rot3  <  Rot1  =  " << (Rot3 < Rot1) << endl;
 
 		cout << "Rot1[n]  =" << "  Rot1[0]=" << Rot1[0] << "  Rot1[1]=" << Rot1[1] << "  Rot1[2]=" << Rot1[2] << "  Rot1[3]=" << Rot1[3] << endl;
@@ -624,10 +632,17 @@ int main()
 	// Matrix3 tests
 	{
 		
-		MathLibrary::Matrix3 Poly1 = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+		MathLibrary::Matrix3 Poly1 = {1,2,3,4,5,6,7,8,9};
+		MathLibrary::Matrix3 Poly2 = {9,8,7,6,5,4,3,2,1};
+		MathLibrary::Matrix3 Poly3;
 
-		ReadArray(Poly1.arr, 9);
+		MathLibrary::Matrix3 Poly4;
+		cout << "Poly4  =  " << ReadArray(Poly4.arr, 9) << endl;
 
+		// CONTINUE HERE
+		cout << ReadArray(Poly1.arr, 9) << "  ?  " << ReadArray(Poly2.arr, 9) << "  =  " << ReadArray(Poly3.arr, 9) << endl;
+
+		
 
 
 
