@@ -374,13 +374,14 @@ namespace MathLibrary {
 				float m1, m2, m3, m4, m5, m6, m7, m8, m9;
 			};
 			float arr[9];
+			float grid[3][3];
 		};
 
 		Matrix3() {
 
 			for (int i = 0; i < 9; i++) {
 
-				if (i == 0 || i == 4 || i == 8) {
+				if (i % 4 == 0) {
 					arr[i] = 1;
 				}
 				else {
@@ -434,12 +435,16 @@ namespace MathLibrary {
 
 		}
 
-		//Vector3 operator*(const Vector3& op) {
-		//
-		//	return;
-		//
-		//}
-		//
+		Vector3 operator*(Vector3 op) {
+
+			op.x = grid[0][0] * op.x + grid[0][1] * op.x + grid[0][2] * op.z;			// Still wrapping my head around this, so the vector's X must be multiplied
+			op.y = grid[1][0] * op.x + grid[1][1] * op.x + grid[1][2] * op.z;			// by one of Matr's full vectors, M0x * Vx + M0y * Vx + M0z * Vx ? I'm not
+			op.z = grid[2][0] * op.x + grid[2][1] * op.x + grid[2][2] * op.z;			// sure what this is for and need to look into it more.
+
+		return op;
+		
+		}
+		
 		//Matrix3 operator*(const Matrix3& op) {
 		//
 		//	return;
@@ -632,15 +637,16 @@ int main()
 	// Matrix3 tests
 	{
 		
-		MathLibrary::Matrix3 Poly1 = {1,2,3,4,5,6,7,8,9};
-		MathLibrary::Matrix3 Poly2 = {9,8,7,6,5,4,3,2,1};
-		MathLibrary::Matrix3 Poly3;
+		MathLibrary::Matrix3 Matr1 = {1,2,3,4,5,6,7,8,9};
+		MathLibrary::Matrix3 Matr2 = {9,8,7,6,5,4,3,2,1};
+		MathLibrary::Matrix3 Matr3;
 
-		MathLibrary::Matrix3 Poly4;
-		cout << "Poly4  =  " << ReadArray(Poly4.arr, 9) << endl;
+		MathLibrary::Vector3 Pos1 = {1,2,3};
+		MathLibrary::Vector3 Pos2;
+		Pos2 = Matr1 * Pos1;
 
 		// CONTINUE HERE
-		cout << ReadArray(Poly1.arr, 9) << "  ?  " << ReadArray(Poly2.arr, 9) << "  =  " << ReadArray(Poly3.arr, 9) << endl;
+		cout << ReadArray(Matr1.arr, 9) << "  ?  " << ReadArray(Matr2.arr, 9) << "  =  " << ReadArray(Matr3.arr, 9) << endl;
 
 		
 
