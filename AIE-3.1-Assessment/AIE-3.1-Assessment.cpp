@@ -357,8 +357,7 @@ namespace MathLibrary {
 		}
 
 		float operator[](int i) {          // Originally i used switch cases but this felt more efficient, i make a temporary vector of the
-			// current Vector3's XYZ values, then just use the input int to return the float at that index.
-			
+										   // current Vector3's XYZ values, then just use the input int to return the float at that index.
 			float XYZW[4] {x,y,z,w};
 
 			return XYZW[i];
@@ -435,45 +434,72 @@ namespace MathLibrary {
 
 		}
 
-		Vector3 operator*(Vector3 op) {
+		Vector3 operator*(const Vector3& op) {
 
-			op.x = grid[0][0] * op.x + grid[0][1] * op.x + grid[0][2] * op.z;			// Still wrapping my head around this, so the vector's X must be multiplied
-			op.y = grid[1][0] * op.x + grid[1][1] * op.x + grid[1][2] * op.z;			// by one of Matr's full vectors, M0x * Vx + M0y * Vx + M0z * Vx ? I'm not
-			op.z = grid[2][0] * op.x + grid[2][1] * op.x + grid[2][2] * op.z;			// sure what this is for and need to look into it more.
+			Vector3 temp;
 
-		return op;
+			temp.x = grid[0][0] * op.x + grid[0][1] * op.y + grid[0][2] * op.z;			// Still wrapping my head around this, so the vector's X must be multiplied
+			temp.y = grid[1][0] * op.x + grid[1][1] * op.y + grid[1][2] * op.z;			// by one of Matr's full vectors, M0x * Vx + M0y * Vx + M0z * Vx ? I'm not
+			temp.z = grid[2][0] * op.x + grid[2][1] * op.y + grid[2][2] * op.z;			// sure what this is for and need to look into it more.
+
+		return temp;
 		
 		}
 		
-		//Matrix3 operator*(const Matrix3& op) {
-		//
-		//	return;
-		//
-		//}
-		//
-		//Matrix3 operator*=(const Matrix3& op) {
-		//
-		//	return;
-		//
-		//}
-		//
-		//Matrix3 operator==(const Matrix3& op) {
-		//
-		//	return;
-		//
-		//}
-		//
-		//Matrix3 operator!=(const Matrix3& op) {
-		//
-		//	return;
-		//
-		//}
-		//
-		//float operator[](int i) {
-		//
-		//	return this->arr[i];
-		//
-		//}
+		Matrix3 operator*(const Matrix3& op) {
+		
+			Matrix3 temp = 0;
+
+			for (int A = 0; A < 3; A++) {
+				for (int B = 0; B < 3; B++) {
+					for (int C = 0; C < 3; C++) {
+						temp.grid[A][B] += grid[A][C] * op.grid[C][B];
+					}
+				}
+			}
+
+			return temp;
+		
+		}
+		
+		Matrix3 operator*=(const Matrix3& op) {			// NOT FINISHED
+		
+			Matrix3 test;
+			test = *this * op;
+
+			return test;
+		
+		}
+		
+		bool operator==(const Matrix3& op) {
+
+			for (int i = 0; i < 9; i++) {
+				if (arr[i] != op.arr[i]) {
+					return false;
+				}
+			}
+
+			return true;
+		
+		}
+		
+		bool operator!=(const Matrix3& op) {
+		
+			for (int i = 0; i < 9; i++) {
+				if (arr[i] != op.arr[i]) {
+					return true;
+				}
+			}
+
+			return false;
+		
+		}
+		
+		float operator[](int i) {
+		
+			return arr[i];
+		
+		}
 
 	};
 
@@ -485,10 +511,10 @@ string ReadArray(float Array[], size_t Size) {
 	int Root = sqrt(Size);
 
 	string Build = to_string(Array[0]);
-	Build.erase(Build.find_last_not_of("0") + 1, string::npos);				 // Read about this on Stack Overflow, first param is a function for getting the
-	Build.erase(Build.find_last_not_of(".") + 1, string::npos);
-	
-	for (int i = 1; i < Size; i++) {
+	Build.erase(Build.find_last_not_of("0") + 1, string::npos);				 // Read about this on Stack Overflow, it gets the position of the last digit that
+	Build.erase(Build.find_last_not_of(".") + 1, string::npos);				 // isn't a 0, then removes everything from the next digit onwards. It does it again
+																			 // for the period in case the result would be a whole number, to avoid ints looking
+	for (int i = 1; i < Size; i++) {										 // like 1. instead of just 1which is more comfortable to read.
 		Build += " " + to_string(Array[i]);
 		Build.erase(Build.find_last_not_of("0") + 1, string::npos);
 		Build.erase(Build.find_last_not_of(".") + 1, string::npos);
@@ -533,27 +559,27 @@ int main()
 
 		Pos3 = {1,1,1};
 		Pos3 += Pos1;
-		cout << " +=  " << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+		cout << "1 1 1  +=  " << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = {1,1,1};
 		Pos3 -= Pos1;
-		cout << " -=  " << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+		cout << "1 1 1  -=  " << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = {1,1,1};
 		Pos3 *= Pos1;
-		cout << " *=  " << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+		cout << "1 1 1  *=  " << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = {1,1,1};
 		Pos3 *= 5;
-		cout << " *=  5  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+		cout << "1 1 1  *=  5  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = {1,1,1};
 		Pos3 /= 5;
-		cout << " /=  5  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+		cout << "1 1 1  /=  5  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = {1,1,1};
 		-Pos3;
-		cout << " -Pos  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+		cout << " -Pos3  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = {1,1,1};
 		cout << "Pos3  ==  Pos1  =  " << (Pos3 == Pos1) << endl;
@@ -597,35 +623,33 @@ int main()
 
 		Rot3 = {1,1,1,1};
 		Rot3 += Rot1;
-		cout << " +=  " << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		cout << "1 1 1 1  +=  " << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
 		Rot3 = {1,1,1,1};
 		Rot3 -= Rot1;
-		cout << " -=  " << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		cout << "1 1 1 1  -=  " << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
 		Rot3 = {1,1,1,1};
 		Rot3 *= Rot1;
-		cout << " *=  " << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		cout << "1 1 1 1  *=  " << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
 		Rot3 = {1,1,1,1};
 		Rot3 *= 5;
-		cout << " *=  5  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		cout << "1 1 1 1  *=  5  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
 		Rot3 = {1,1,1,1};
 		Rot3 /= 5;
-		cout << " /=  5  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		cout << "1 1 1 1  /=  5  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
 		Rot3 = {1,1,1,1};
 		-Rot3;
-		cout << " -Rot  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		cout << " -Rot3  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
-		Rot3 = {1,1,1,1};
+		Rot3 = { 1,1,1,1 };
 		cout << "Rot3  ==  Rot1  =  " << (Rot3 == Rot1) << endl;
 
-		Rot3 = {1,1,1,1};
 		cout << "Rot3  !=  Rot1  =  " << (Rot3 != Rot1) << endl;
 
-		Rot3 = {1,1,1,1};
 		cout << "Rot3  <  Rot1  =  " << (Rot3 < Rot1) << endl;
 
 		cout << "Rot1[n]  =" << "  Rot1[0]=" << Rot1[0] << "  Rot1[1]=" << Rot1[1] << "  Rot1[2]=" << Rot1[2] << "  Rot1[3]=" << Rot1[3] << endl;
@@ -643,14 +667,22 @@ int main()
 
 		MathLibrary::Vector3 Pos1 = {1,2,3};
 		MathLibrary::Vector3 Pos2;
-		Pos2 = Matr1 * Pos1;
-
-		// CONTINUE HERE
-		cout << ReadArray(Matr1.arr, 9) << "  ?  " << ReadArray(Matr2.arr, 9) << "  =  " << ReadArray(Matr3.arr, 9) << endl;
-
 		
 
+		Pos2 = Matr1 * Pos1;
+		cout << ReadArray(Matr1.arr, 9) << "  *  " << Pos1.x << " " <<  Pos1.y << " " << Pos1.z << "  =  " << Pos2.x << " " << Pos2.y << " " << Pos2.z << endl;
 
+		Matr3 = Matr1 * Matr2;
+		cout << ReadArray(Matr1.arr, 9) << "  *  " << ReadArray(Matr2.arr, 9) << "  =  " << ReadArray(Matr3.arr, 9) << endl;
+	
+		Matr1 *= Matr2;
+		cout << "1 2 3 | 4 5 6 | 7 8 9  *=  " << ReadArray(Matr2.arr, 9) << "  =  " << ReadArray(Matr1.arr, 9) << endl;
+
+		cout << "Matr1  ==  Matr2  =  " << (Matr1 == Matr2) << endl;
+
+		cout << "Matr1  !=  Matr2  =  " << (Matr1 != Matr2) << endl;
+
+		cout << "Matr1[n]  =  Matr[m1-m9] = " << Matr1[0] << " " << Matr1[1] << " " << Matr1[2] << " " << Matr1[3] << " " << Matr1[4] << " " << Matr1[5] << " " << Matr1[6] << " " << Matr1[7] << " " << Matr1[8] << endl;
 
 	}
 
