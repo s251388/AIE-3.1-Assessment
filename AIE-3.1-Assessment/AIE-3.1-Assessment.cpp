@@ -1,6 +1,9 @@
 
+#define _USE_MATH_DEFINES
+
 #include <iostream>
 #include <string>
+#include <math.h>
 
 using namespace std;
 
@@ -182,57 +185,63 @@ namespace MathLibrary {
 
 
 		float Dot(const Vector3& op) {
-
-			return;
+			
+			return x*op.x + y*op.y + z*op.z;
 
 		}
 
 		Vector3 Cross(const Vector3& op) {
 
-		return;
-
+		return {y * op.z - z * op.y, z * op.x - x * op.z, x * op.y - y * op.x};
+		
 		}
-
+		
 		float Magnitude() {
-
-		return;
-
+		
+		return sqrt(x * x + y * y + z * z);
+		
 		}
-
+		
 		void Normalise() {								// Not sure what the difference will be between this function
 														// and the one below, i'll hopefully find out as i go.
+			*this / Magnitude();
+			
 			return;
-
+		
 		}
-
+		
 		Vector3 Normalised() {				// These don't need an input because unlike regular functions, as members of structs they technically
 											// always have the object they are from fed into/accessible from within the function by default.
-			return;
-
+			Vector3 temp = *this;
+			
+			return temp / Magnitude();
+		
 		}
-
-		bool IsApproximatelyEqual(const Vector3& op, float E) {
-
-			return;
-
+		
+		bool IsApproximatelyEqual(const Vector3& op, float E) {				// By subtracting one from the other, if they are very similar the magnitude of
+																			// the resulting vector3 should be close to 0. I worry about how this would work
+			return (*this - op).Magnitude() < E;							// for vector4s as quaternions though, as any given rotation can be represented
+																			// by two different sets of values, like 1 0 0 0 and -1 0 0 0, for example.
 		}
-
-		float AngleBetween(const Vector3& op) {
-
-			return;
-
+		
+		float AngleBetween(Vector3& op) {
+		
+			return acos(Normalised().Dot(op.Normalised()));
+		
 		}
-
+		
 		float Distance(const Vector3& op) {
-
-			return;
-
+		
+			return (*this - op).Magnitude();
+		
 		}
+		
+		float Angle2D() {									// Assessment had confusing wording for this part, said it wants the angle around
+															// XY from 1,0 but early on it mentions that for 2D stuff x=forward and y=right
+			float Root = sqrt(x * x + y * y);
 
-		float Angle2D() {
-
-			return;
-
+			return atan2(y / Root, x / Root) * (180 / M_PI);
+		
 		}
 
 	};
@@ -425,53 +434,53 @@ namespace MathLibrary {
 		}
 
 
-		float Dot(const Vector4& op) {
-
-			return;
-
-		}
-
-		Vector4 Cross(const Vector4& op) {
-
-			return;
-
-		}
-
-		float Magnitude() {
-
-			return;
-
-		}
-
-		void Normalise() {
-		
-			return;
-
-		}
-
-		Vector4 Normalised() {
-		
-			return;
-
-		}
-
-		bool IsApproximatelyEqual(const Vector4& op, float E) {
-
-			return;
-
-		}
-
-		float AngleBetween(const Vector4& op) {
-
-			return;
-
-		}
-
-		float Distance(const Vector4& op) {
-
-			return;
-
-		}
+		//float Dot(const Vector4& op) {
+		//
+		//	return;
+		//
+		//}
+		//
+		//Vector4 Cross(const Vector4& op) {
+		//
+		//	return;
+		//
+		//}
+		//
+		//float Magnitude() {
+		//
+		//	return;
+		//
+		//}
+		//
+		//void Normalise() {
+		//
+		//	return;
+		//
+		//}
+		//
+		//Vector4 Normalised() {
+		//
+		//	return;
+		//
+		//}
+		//
+		//bool IsApproximatelyEqual(const Vector4& op, float E) {
+		//
+		//	return;
+		//
+		//}
+		//
+		//float AngleBetween(const Vector4& op) {
+		//
+		//	return;
+		//
+		//}
+		//
+		//float Distance(const Vector4& op) {
+		//
+		//	return;
+		//
+		//}
 
 	};
 
@@ -611,47 +620,47 @@ namespace MathLibrary {
 		}
 
 
-		Matrix3 MakeRotate(float op) {
-
-			return;
-
-		}
-
-		Matrix3 MakeScale(const Vector3& op) {
-
-			return;
-
-		}
-
-		Matrix3 MakeTransform(const Vector3& op) {
-
-			return;
-
-		}
-
-		Vector3 GetRight() {
-
-			return;
-
-		}
-
-		Vector3 GetForward() {
-
-			return;
-
-		}
-
-		Vector3 GetTranslate() {
-
-			return;
-
-		}
-
-		bool IsApproximatelyEqual(const Matrix3& op, float E) {
-
-			return;
-
-		}
+		//Matrix3 MakeRotate(float op) {
+		//
+		//	return;
+		//
+		//}
+		//
+		//Matrix3 MakeScale(const Vector3& op) {
+		//
+		//	return;
+		//
+		//}
+		//
+		//Matrix3 MakeTransform(const Vector3& op) {
+		//
+		//	return;
+		//
+		//}
+		//
+		//Vector3 GetRight() {
+		//
+		//	return;
+		//
+		//}
+		//
+		//Vector3 GetForward() {
+		//
+		//	return;
+		//
+		//}
+		//
+		//Vector3 GetTranslate() {
+		//
+		//	return;
+		//
+		//}
+		//
+		//bool IsApproximatelyEqual(const Matrix3& op, float E) {
+		//
+		//	return;
+		//
+		//}
 
 	};
 
@@ -792,115 +801,115 @@ namespace MathLibrary {
 		}
 
 
-		Matrix4 MakeRotateX(float op) {
-
-			return;
-
-		}
-
-		Matrix4 MakeRotateY(float op) {
-
-			return;
-
-		}
-
-		Matrix4 MakeRotateZ(float op) {
-
-			return;
-
-		}
-
-
-		Matrix4 MakeScale(const Vector4& op) {
-
-			return;
-
-		}
-
-		Vector4 GetRight() {
-
-			return;
-
-		}
-
-		Vector4 GetUp() {
-
-			return;
-
-		}
-
-		Vector4 GetForward() {
-
-			return;
-
-		}
-
-		Vector4 GetPosition() {
-
-			return;
-
-		}
-
-
-		bool IsApproximatelyEqual(const Matrix4& op, float E) {
-
-			return;
-
-		}
-
-		void SetTranslate(const Vector4& op) {
-
-			return;
-
-		}
-
-		Matrix4 MakeTranslate(const Vector4& op) {
-
-			return;
-
-		}
+		//Matrix4 MakeRotateX(float op) {
+		//
+		//	return;
+		//
+		//}
+		//
+		//Matrix4 MakeRotateY(float op) {
+		//
+		//	return;
+		//
+		//}
+		//
+		//Matrix4 MakeRotateZ(float op) {
+		//
+		//	return;
+		//
+		//}
+		//
+		//
+		//Matrix4 MakeScale(const Vector4& op) {
+		//
+		//	return;
+		//
+		//}
+		//
+		//Vector4 GetRight() {
+		//
+		//	return;
+		//
+		//}
+		//
+		//Vector4 GetUp() {
+		//
+		//	return;
+		//
+		//}
+		//
+		//Vector4 GetForward() {
+		//
+		//	return;
+		//
+		//}
+		//
+		//Vector4 GetPosition() {
+		//
+		//	return;
+		//
+		//}
+		//
+		//
+		//bool IsApproximatelyEqual(const Matrix4& op, float E) {
+		//
+		//	return;
+		//
+		//}
+		//
+		//void SetTranslate(const Vector4& op) {
+		//
+		//	return;
+		//
+		//}
+		//
+		//Matrix4 MakeTranslate(const Vector4& op) {
+		//
+		//	return;
+		//
+		//}
 
 	};
 
 	struct Color {
 
-		unsigned int rgba;
+	//	unsigned int rgba;
 
-		Color() {
+	//	Color() {
 
-			rgba 0;
+	//		rgba 0;
 
-		}
+	//	}
 
-		Color(float RR, float GG, float BB, float AA) {
+	//	Color(float RR, float GG, float BB, float AA) {
 
-			r = RR;
-			g = GG;
-			b = BB;
-			a = AA;
+	//		r = RR;
+	//		g = GG;
+	//		b = BB;
+	//		a = AA;
 
-		}
-		
-		Color(const Color& Copy) {
+	//	}
+	//	
+	//	Color(const Color& Copy) {
 
-			r = Copy.r;
-			g = Copy.g;
-			b = Copy.b;
-			a = Copy.a;
+	//		r = Copy.r;
+	//		g = Copy.g;
+	//		b = Copy.b;
+	//		a = Copy.a;
 
-		}
-
-
+	//	}
 
 
-		unsigned char getRed();
-		void setRed(unsigned char redValue);
-		unsigned char getGreen();
-		void setGreen (unsigned char greenValue);
-		unsigned char getBlue();
-		void setBlue(unsigned char blueValue);
-		unsigned char getAlpha();
-		void setAlpha(unsigned char alphaValue);
+
+
+	//	unsigned char getRed();
+	//	void setRed(unsigned char redValue);
+	//	unsigned char getGreen();
+	//	void setGreen (unsigned char greenValue);
+	//	unsigned char getBlue();
+	//	void setBlue(unsigned char blueValue);
+	//	unsigned char getAlpha();
+	//	void setAlpha(unsigned char alphaValue);
 
 	};
 
@@ -943,34 +952,31 @@ int main()
 		cout << "VECTOR3 TESTS\n" << endl;
 
 		Pos3 = Pos1 + Pos2;
-		cout << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  +  " << Pos2.x << " " << Pos2.y << " " << Pos2.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+		cout << "1 2 3  +  4 5 6  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = Pos1 - Pos2;
-		cout << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  -  " << Pos2.x << " " << Pos2.y << " " << Pos2.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+		cout << "1 2 3  -  4 5 6  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = Pos1 * Pos2;
-		cout << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  *  " << Pos2.x << " " << Pos2.y << " " << Pos2.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+		cout << "1 2 3  *  4 5 6  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = Pos1 * 5;
-		cout << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  *  " << "5f" << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+		cout << "1 2 3  *  5f" << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = Pos1 / 5;
-		cout << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  /  " << "5f" << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
-
-
-		cout << "\nPos3 from here on will always be set to 1,1,1 before operations.\n" << endl;
+		cout << "1 2 3  /  5f" << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = {1,1,1};
 		Pos3 += Pos1;
-		cout << "1 1 1  +=  " << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+		cout << "1 1 1  +=  1 2 3  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = {1,1,1};
 		Pos3 -= Pos1;
-		cout << "1 1 1  -=  " << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+		cout << "1 1 1  -=  1 2 3  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = {1,1,1};
 		Pos3 *= Pos1;
-		cout << "1 1 1  *=  " << Pos1.x << " " << Pos1.y << " " << Pos1.z << "  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+		cout << "1 1 1  *=  1 2 3  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
 
 		Pos3 = {1,1,1};
 		Pos3 *= 5;
@@ -995,6 +1001,32 @@ int main()
 
 		cout << "Pos1[n]  =" << "  Pos1[0]=" << Pos1[0] << "  Pos1[1]=" << Pos1[1] << "  Pos1[2]=" << Pos1[2] << endl;
 
+
+		cout << "\n";
+		
+
+		cout << "1 2 3  DOT  4 5 6  =  " << Pos1.Dot(Pos2) << endl;
+		
+		Pos3 = Pos1.Cross(Pos2);
+		cout << "1 2 3  CROSS  4 5 6  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+
+		cout << "1 2 3  MAGNITUDE  =  " << Pos1.Magnitude() << endl;
+
+		Pos3 = {1,1,1};
+		cout << "1 1 1  NORMALISE  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+
+		Pos3 = Pos1.Normalised();
+		cout << "1 2 3  NORMALISED  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << endl;
+		
+		Pos3 = {1.00001,2.00002,3.00003};
+		cout << "1 2 3  APPROX(0.0001)  1.00001 2.00002 3.00003  =  " << Pos1.IsApproximatelyEqual(Pos3, 0.0001) << endl;
+
+		cout << "1 2 3  ANGLEBETWEEN  4 5 6  =  " << Pos1.AngleBetween(Pos2) << endl;
+
+		cout << "1 2 3  DISTANCE  4 5 6  =  " << Pos1.Distance(Pos2) << endl;
+
+		cout << "1 2 3  ANGLE2D  =  " << Pos1.Angle2D() << endl;
+
 		cout << "\n\n\n";
 
 	}
@@ -1009,34 +1041,31 @@ int main()
 		cout << "VECTOR4 TESTS\n" << endl;
 
 		Rot3 = Rot1 + Rot2;
-		cout << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  +  " << Rot2.x << " " << Rot2.y << " " << Rot2.z << " " << Rot2.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		cout << "1 2 3 4  +  5 6 7 8  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 		
 		Rot3 = Rot1 - Rot2;													 
-		cout << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  -  " << Rot2.x << " " << Rot2.y << " " << Rot2.z << " " << Rot2.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		cout << "1 2 3 4  -  5 6 7 8  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
 		Rot3 = Rot1 * Rot2;													 
-		cout << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  *  " << Rot2.x << " " << Rot2.y << " " << Rot2.z << " " << Rot2.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		cout << "1 2 3 4  *  5 6 7 8  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
 		Rot3 = Rot1 * 5;													 
-		cout << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  *  " << "5f" << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		cout << "1 2 3 4  *  5f  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
 		Rot3 = Rot1 / 5;													 
-		cout << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  /  " << "5f" << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
-
-
-		cout << "\nRot3 from here on will always be set to 1,1,1,1 before operations.\n" << endl;
+		cout << "1 2 3 4  /  5f  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
 		Rot3 = {1,1,1,1};
 		Rot3 += Rot1;
-		cout << "1 1 1 1  +=  " << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		cout << "1 1 1 1  +=  1 2 3 4  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
 		Rot3 = {1,1,1,1};
 		Rot3 -= Rot1;
-		cout << "1 1 1 1  -=  " << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		cout << "1 1 1 1  -=  1 2 3 4  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
 		Rot3 = {1,1,1,1};
 		Rot3 *= Rot1;
-		cout << "1 1 1 1  *=  " << Rot1.x << " " << Rot1.y << " " << Rot1.z << " " << Rot1.w << "  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		cout << "1 1 1 1  *=  1 2 3 4  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
 
 		Rot3 = {1,1,1,1};
 		Rot3 *= 5;
@@ -1059,6 +1088,10 @@ int main()
 
 		cout << "Rot1[n]  =" << "  Rot1[0]=" << Rot1[0] << "  Rot1[1]=" << Rot1[1] << "  Rot1[2]=" << Rot1[2] << "  Rot1[3]=" << Rot1[3] << endl;
 
+		cout << "\n";
+
+		//
+
 		cout << "\n\n\n";
 
 	}
@@ -1076,7 +1109,7 @@ int main()
 		cout << "MATRIX3 TESTS\n" << endl;
 
 		Pos2 = Matr1 * Pos1;
-		cout << ReadArray(Matr1.arr, 9) << "  *  " << Pos1.x << " " <<  Pos1.y << " " << Pos1.z << "  =  " << Pos2.x << " " << Pos2.y << " " << Pos2.z << endl;
+		cout << ReadArray(Matr1.arr, 9) << "  *  1 2 3  =  " << Pos2.x << " " << Pos2.y << " " << Pos2.z << endl;
 
 		Matr3 = Matr1 * Matr2;
 		cout << ReadArray(Matr1.arr, 9) << "  *  " << ReadArray(Matr2.arr, 9) << "  =  " << ReadArray(Matr3.arr, 9) << endl;
@@ -1092,6 +1125,10 @@ int main()
 		for (int i = 0; i < 9; i++) {
 			cout << " [" << i << "]=" << Matr1[i];
 		}
+
+		cout << "\n";
+
+		//
 
 		cout << "\n\n\n\n";
 
@@ -1110,7 +1147,7 @@ int main()
 		cout << "MATRIX4 TESTS\n" << endl;
 
 		Pos2 = Matr1 * Pos1;
-		cout << ReadArray(Matr1.arr, 16) << "  *  " << Pos1.x << " " << Pos1.y << " " << Pos1.z << " " << Pos1.w << "  =  " << Pos2.x << " " << Pos2.y << " " << Pos2.z <<  " " << Pos2.w << endl;
+		cout << ReadArray(Matr1.arr, 16) << "  *  " << "1 2 3 4  =  " << Pos2.x << " " << Pos2.y << " " << Pos2.z <<  " " << Pos2.w << endl;
 
 		Matr3 = Matr2 * Matr1;
 		cout << ReadArray(Matr2.arr, 16) << "  *  " << ReadArray(Matr1.arr, 16) << "  =  " << ReadArray(Matr3.arr, 16) << endl;
@@ -1126,6 +1163,10 @@ int main()
 		for (int i = 0; i < 16; i++) {
 			cout << " [" << i << "]=" << Matr1[i];
 		}
+
+		cout << "\n";
+
+		//
 
 		cout << "\n\n\n\n";
 
