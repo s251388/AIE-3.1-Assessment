@@ -2,6 +2,7 @@
 #define _USE_MATH_DEFINES
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <math.h>
 
@@ -218,11 +219,11 @@ namespace MathLibrary {
 		
 		}
 		
-		bool IsApproximatelyEqual(const Vector3& op, float E) {				// By subtracting one from the other, if they are very similar the magnitude of
-																			// the resulting vector3 should be close to 0. I worry about how this would work
-			return (*this - op).Magnitude() < E;							// for vector4s as quaternions though, as any given rotation can be represented
-																			// by two different sets of values, like 1 0 0 0 and -1 0 0 0, for example.
-		}
+		bool IsApproximatelyEqual(const Vector3& op, float E) {				
+																	// By subtracting one from the other, if they are very similar the magnitude of
+			return (*this - op).Magnitude() < E;					// the resulting vector3 should be close to 0. I worry about how this would work
+																	// for vector4s as quaternions though, as any given rotation can be represented
+		}															// by two different sets of values, like 1 0 0 0 and -1 0 0 0, for example.
 		
 		float AngleBetween(Vector3& op) {
 		
@@ -237,10 +238,10 @@ namespace MathLibrary {
 		}
 		
 		float Angle2D() {									// Assessment had confusing wording for this part, said it wants the angle around
-															// XY from 1,0 but early on it mentions that for 2D stuff x=forward and y=right
-			float Root = sqrt(x * x + y * y);
-
-			return atan2(y / Root, x / Root) * (180 / M_PI);
+															// XY from 1,0 but early on it mentions that for 2D stuff x=forward and y=right.
+			float XYroot = sqrt(x * x + y * y);				// Also i had to include <math.h> to get proper PI here, hopefully that's allowed.
+			
+			return atan2(y / XYroot, x / XYroot) * (180 / M_PI);		
 		
 		}
 
@@ -296,7 +297,7 @@ namespace MathLibrary {
 			temp.x = x - op.x;
 			temp.y = y - op.y;
 			temp.z = z - op.z;
-			temp.w = w - op.w;
+			temp.w = w + op.w;
 
 			return temp;
 		}
@@ -307,7 +308,7 @@ namespace MathLibrary {
 			temp.x = x * op.x;
 			temp.y = y * op.y;
 			temp.z = z * op.z;
-			temp.w = w * op.w;
+			temp.w = w + op.w;
 
 			return temp;
 		}
@@ -318,7 +319,6 @@ namespace MathLibrary {
 			temp.x = x * op;
 			temp.y = y * op;
 			temp.z = z * op;
-			temp.w = w * op;
 
 			return temp;
 		}
@@ -329,7 +329,6 @@ namespace MathLibrary {
 			temp.x = x / op;
 			temp.y = y / op;
 			temp.z = z / op;
-			temp.w = w / op;
 
 			return temp;
 		}
@@ -359,7 +358,7 @@ namespace MathLibrary {
 			x -= op.x;
 			y -= op.y;
 			z -= op.z;
-			w -= op.w;
+			w += op.w;
 
 			return *this;
 		}
@@ -369,7 +368,7 @@ namespace MathLibrary {
 			x *= op.x;
 			y *= op.y;
 			z *= op.z;
-			w *= op.w;
+			w += op.w;
 
 			return *this;
 		}
@@ -379,7 +378,6 @@ namespace MathLibrary {
 			x *= op;
 			y *= op;
 			z *= op;
-			w *= op;
 
 			return *this;
 		}
@@ -389,7 +387,6 @@ namespace MathLibrary {
 			x /= op;
 			y /= op;
 			z /= op;
-			w /= op;
 
 			return *this;
 		}
@@ -399,7 +396,6 @@ namespace MathLibrary {
 			x *= -1;
 			y *= -1;
 			z *= -1;
-			w *= -1;
 
 			return *this;
 		}
@@ -416,11 +412,11 @@ namespace MathLibrary {
 
 			Vector4 temp1 = *this;
 			temp1 *= *this;
-			float mag1 = (temp1.x + temp1.y + temp1.z + temp1.w);        // Gets the XYZ values squared and added. The two magnitudes don't need to be
-			// square-rooted back down because they are BOTH squared, their relationship
-			Vector4 temp2 = op;                                // to eachother will be the same no matter what i multiply or divide them by.
+			float mag1 = (temp1.x + temp1.y + temp1.z);				// Gets the XYZ values squared and added. The two magnitudes don't need to be
+																	// square-rooted back down because they are BOTH squared, their relationship
+			Vector4 temp2 = op;										// to eachother will be the same no matter what i multiply or divide them by.
 			temp2 *= op;
-			float mag2 = (temp2.x + temp2.y + temp2.z + temp2.w);
+			float mag2 = (temp2.x + temp2.y + temp2.z);
 
 			return (mag1 < mag2);
 		}
@@ -434,53 +430,58 @@ namespace MathLibrary {
 		}
 
 
-		//float Dot(const Vector4& op) {
-		//
-		//	return;
-		//
-		//}
-		//
-		//Vector4 Cross(const Vector4& op) {
-		//
-		//	return;
-		//
-		//}
-		//
-		//float Magnitude() {
-		//
-		//	return;
-		//
-		//}
-		//
-		//void Normalise() {
-		//
-		//	return;
-		//
-		//}
-		//
-		//Vector4 Normalised() {
-		//
-		//	return;
-		//
-		//}
-		//
-		//bool IsApproximatelyEqual(const Vector4& op, float E) {
-		//
-		//	return;
-		//
-		//}
-		//
-		//float AngleBetween(const Vector4& op) {
-		//
-		//	return;
-		//
-		//}
-		//
-		//float Distance(const Vector4& op) {
-		//
-		//	return;
-		//
-		//}
+		float Dot(const Vector4& op) {
+
+			return x*op.x + y*op.y + z*op.z;
+
+		}
+
+		Vector4 Cross(const Vector4& op) {
+
+			return {y * op.z - z * op.y, z * op.x - x * op.z, x * op.y - y * op.x, w + op.w};
+
+		}
+
+		float Magnitude() {
+
+			return sqrt(x * x + y * y + z * z);
+
+		}
+
+		void Normalise() {								// Not sure what the difference will be between this function
+														// and the one below, i'll hopefully find out as i go.
+			*this / Magnitude();
+
+			return;
+
+		}
+
+		Vector4 Normalised() {				// These don't need an input because unlike regular functions, as members of structs they technically
+											// always have the object they are from fed into/accessible from within the function by default.
+			Vector4 temp = *this;
+
+			return temp / Magnitude();
+
+		}
+
+		bool IsApproximatelyEqual(const Vector4& op, float E) {				
+																	// By subtracting one from the other, if they are very similar the magnitude of
+			return (*this - op).Magnitude() < E;					// the resulting vector3 should be close to 0. I worry about how this would work
+																	// for vector4s as quaternions though, as any given rotation can be represented
+		}															// by two different sets of values, like 1 0 0 0 and -1 0 0 0, for example.
+
+		float AngleBetween(Vector4& op) {
+
+			return acos(Normalised().Dot(op.Normalised()));
+
+		}
+
+		float Distance(const Vector4& op) {
+
+			return (*this - op).Magnitude();
+
+		}
+
 
 	};
 
@@ -941,6 +942,10 @@ string ReadArray(float Array[], size_t Size) {
 
 int main()
 {
+	
+
+	float test = 1234.23456789;
+	cout << fixed << setprecision(4) << test << endl << endl;
 
 	// Vector3 tests
 	{
@@ -1034,63 +1039,81 @@ int main()
 	// Vector4 tests
 	{
 
-		MathLibrary::Vector4 Rot1 {1,2,3,4};
-		MathLibrary::Vector4 Rot2 {5,6,7,8};
-		MathLibrary::Vector4 Rot3 {};
+		MathLibrary::Vector4 Pos1 {1,2,3,1};
+		MathLibrary::Vector4 Pos2 {4,5,6,0};
+		MathLibrary::Vector4 Pos3 {};
 
 		cout << "VECTOR4 TESTS\n" << endl;
 
-		Rot3 = Rot1 + Rot2;
-		cout << "1 2 3 4  +  5 6 7 8  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		Pos3 = Pos1 + Pos2;
+		cout << "1 2 3 1  +  4 5 6 0  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << " " << Pos3.w << endl;
 		
-		Rot3 = Rot1 - Rot2;													 
-		cout << "1 2 3 4  -  5 6 7 8  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		Pos3 = Pos1 - Pos2;													 
+		cout << "1 2 3 1  -  4 5 6 0  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << " " << Pos3.w << endl;
 
-		Rot3 = Rot1 * Rot2;													 
-		cout << "1 2 3 4  *  5 6 7 8  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		Pos3 = Pos1 * Pos2;													 
+		cout << "1 2 3 1  *  4 5 6 0  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << " " << Pos3.w << endl;
 
-		Rot3 = Rot1 * 5;													 
-		cout << "1 2 3 4  *  5f  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		Pos3 = Pos1 * 5;													 
+		cout << "1 2 3 1  *  5f  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << " " << Pos3.w << endl;
 
-		Rot3 = Rot1 / 5;													 
-		cout << "1 2 3 4  /  5f  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		Pos3 = Pos1 / 5;													 
+		cout << "1 2 3 1  /  5f  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << " " << Pos3.w << endl;
 
-		Rot3 = {1,1,1,1};
-		Rot3 += Rot1;
-		cout << "1 1 1 1  +=  1 2 3 4  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		Pos3 = {1,1,1,1};
+		Pos3 += Pos1;
+		cout << "1 1 1 1  +=  1 2 3 1  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << " " << Pos3.w << endl;
 
-		Rot3 = {1,1,1,1};
-		Rot3 -= Rot1;
-		cout << "1 1 1 1  -=  1 2 3 4  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		Pos3 = {1,1,1,1};
+		Pos3 -= Pos1;
+		cout << "1 1 1 1  -=  1 2 3 1  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << " " << Pos3.w << endl;
 
-		Rot3 = {1,1,1,1};
-		Rot3 *= Rot1;
-		cout << "1 1 1 1  *=  1 2 3 4  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		Pos3 = {1,1,1,1};
+		Pos3 *= Pos1;
+		cout << "1 1 1 1  *=  1 2 3 1  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << " " << Pos3.w << endl;
 
-		Rot3 = {1,1,1,1};
-		Rot3 *= 5;
-		cout << "1 1 1 1  *=  5  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		Pos3 = {1,1,1,1};
+		Pos3 *= 5;
+		cout << "1 1 1 1  *=  5  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << " " << Pos3.w << endl;
 
-		Rot3 = {1,1,1,1};
-		Rot3 /= 5;
-		cout << "1 1 1 1  /=  5  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		Pos3 = {1,1,1,1};
+		Pos3 /= 5;
+		cout << "1 1 1 1  /=  5  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << " " << Pos3.w << endl;
 
-		Rot3 = {1,1,1,1};
-		-Rot3;
-		cout << " -Rot3  =  " << Rot3.x << " " << Rot3.y << " " << Rot3.z << " " << Rot3.w << endl;
+		Pos3 = {1,1,1,1};
+		-Pos3;
+		cout << " -Rot3  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << " " << Pos3.w << endl;
 
-		Rot3 = { 1,1,1,1 };
-		cout << "Rot3  ==  Rot1  =  " << (Rot3 == Rot1) << endl;
+		Pos3 = { 1,1,1,1 };
+		cout << "Rot3  ==  Rot1  =  " << (Pos3 == Pos1) << endl;
 
-		cout << "Rot3  !=  Rot1  =  " << (Rot3 != Rot1) << endl;
+		cout << "Rot3  !=  Rot1  =  " << (Pos3 != Pos1) << endl;
 
-		cout << "Rot3  <  Rot1  =  " << (Rot3 < Rot1) << endl;
+		cout << "Rot3  <  Rot1  =  " << (Pos3 < Pos1) << endl;
 
-		cout << "Rot1[n]  =" << "  Rot1[0]=" << Rot1[0] << "  Rot1[1]=" << Rot1[1] << "  Rot1[2]=" << Rot1[2] << "  Rot1[3]=" << Rot1[3] << endl;
+		cout << "Rot1[n]  =" << "  Rot1[0]=" << Pos1[0] << "  Rot1[1]=" << Pos1[1] << "  Rot1[2]=" << Pos1[2] << "  Rot1[3]=" << Pos1[3] << endl;
 
 		cout << "\n";
 
-		//
+		cout << "1 2 3  DOT  4 5 6  =  " << Pos1.Dot(Pos2) << endl;
+
+		Pos3 = Pos1.Cross(Pos2);
+		cout << "1 2 3 1  CROSS  4 5 6 0  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << " " << Pos3.w << endl;
+
+		cout << "1 2 3 1  MAGNITUDE  =  " << Pos1.Magnitude() << endl;
+
+		Pos3 = {1,1,1,1};
+		cout << "1 1 1 1  NORMALISE  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << " " << Pos3.w << endl;
+
+		Pos3 = Pos1.Normalised();
+		cout << "1 2 3 1  NORMALISED  =  " << Pos3.x << " " << Pos3.y << " " << Pos3.z << " " << Pos3.w << endl;
+
+		Pos3 = {1.00001,2.00002,3.00003,1};
+		cout << "1 2 3 1  APPROX(0.0001)  1.00001 2.00002 3.00003 0  =  " << Pos1.IsApproximatelyEqual(Pos3, 0.0001) << endl;
+
+		cout << "1 2 3 1  ANGLEBETWEEN  4 5 6 0  =  " << Pos1.AngleBetween(Pos2) << endl;
+
+		cout << "1 2 3 1  DISTANCE  4 5 6 0  =  " << Pos1.Distance(Pos2) << endl;
 
 		cout << "\n\n\n";
 
@@ -1099,8 +1122,8 @@ int main()
 	// Matrix3 tests
 	{
 		
-		MathLibrary::Matrix3 Matr1 = {1,2,3,4,5,6,7,8,9};
-		MathLibrary::Matrix3 Matr2 = {9,8,7,6,5,4,3,2,1};
+		MathLibrary::Matrix3 Matr1 = {1,2,0,3,4,0,5,6,1};
+		MathLibrary::Matrix3 Matr2 = {6,5,0,4,3,0,2,1,1};
 		MathLibrary::Matrix3 Matr3;
 
 		MathLibrary::Vector3 Pos1 = {1,2,3};
@@ -1115,7 +1138,7 @@ int main()
 		cout << ReadArray(Matr1.arr, 9) << "  *  " << ReadArray(Matr2.arr, 9) << "  =  " << ReadArray(Matr3.arr, 9) << endl;
 	
 		Matr1 *= Matr2;
-		cout << "1 2 3 | 4 5 6 | 7 8 9  *=  " << ReadArray(Matr2.arr, 9) << "  =  " << ReadArray(Matr1.arr, 9) << endl;
+		cout << "1 2 0 | 3 4 0 | 5 6 1  *=  " << ReadArray(Matr2.arr, 9) << "  =  " << ReadArray(Matr1.arr, 9) << endl;
 
 		cout << "Matr1  ==  Matr2  =  " << (Matr1 == Matr2) << endl;
 
@@ -1137,23 +1160,23 @@ int main()
 	// Matrix4 tests
 	{
 
-		MathLibrary::Matrix4 Matr1 = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-		MathLibrary::Matrix4 Matr2 = {16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1};
+		MathLibrary::Matrix4 Matr1 = {1,2,3,0,4,5,6,0,7,8,9,0,10,11,12,1};
+		MathLibrary::Matrix4 Matr2 = {12,11,10,0,9,8,7,0,6,5,4,0,3,2,1,1};
 		MathLibrary::Matrix4 Matr3;
 
-		MathLibrary::Vector4 Pos1 = {1,2,3,4};
+		MathLibrary::Vector4 Pos1 = {1,2,3,0};
 		MathLibrary::Vector4 Pos2;
 
 		cout << "MATRIX4 TESTS\n" << endl;
 
 		Pos2 = Matr1 * Pos1;
-		cout << ReadArray(Matr1.arr, 16) << "  *  " << "1 2 3 4  =  " << Pos2.x << " " << Pos2.y << " " << Pos2.z <<  " " << Pos2.w << endl;
+		cout << ReadArray(Matr1.arr, 16) << "  *  " << "1 2 3 0  =  " << Pos2.x << " " << Pos2.y << " " << Pos2.z <<  " " << Pos2.w << endl;
 
 		Matr3 = Matr2 * Matr1;
 		cout << ReadArray(Matr2.arr, 16) << "  *  " << ReadArray(Matr1.arr, 16) << "  =  " << ReadArray(Matr3.arr, 16) << endl;
 
 		Matr2 *= Matr1;
-		cout << "16 15 14 13 | 12 11 10 9 | 8 7 6 5 | 4 3 2 1  *=  " << ReadArray(Matr1.arr, 16) << "  =  " << ReadArray(Matr2.arr, 16) << endl;
+		cout << "12 11 10 0 | 9 8 7 0 | 6 5 4 0 | 3 2 1 1  *=  " << ReadArray(Matr1.arr, 16) << "  =  " << ReadArray(Matr2.arr, 16) << endl;
 
 		cout << "Matr1  ==  Matr2  =  " << (Matr1 == Matr2) << endl;
 
