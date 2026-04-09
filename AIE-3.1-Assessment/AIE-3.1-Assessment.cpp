@@ -203,17 +203,17 @@ namespace MathLibrary {
 		
 		}
 		
-		void Normalise() {								// Not sure what the difference will be between this function
-														// and the one below, i'll hopefully find out as i go.
+		void Normalise() {
+		
 			*this / Magnitude();
 			
 			return;
 		
 		}
 		
-		Vector3 Normalised() {				// These don't need an input because unlike regular functions, as members of structs they technically
-											// always have the object they are from fed into/accessible from within the function by default.
-			Vector3 temp = *this;
+		Vector3 Normalised() {				 
+											// These don't need an input because unlike regular functions, as members of structs they technically 
+			Vector3 temp = *this;			// always have the object they are from fed into/accessible from within the function by default.
 			
 			return temp / Magnitude();
 		
@@ -237,10 +237,10 @@ namespace MathLibrary {
 		
 		}
 		
-		float Angle2D() {									// Assessment had confusing wording for this part, said it wants the angle around
-															// XY from 1,0 but early on it mentions that for 2D stuff x=forward and y=right.
-			float XYroot = sqrt(x * x + y * y);				// Also i had to include <math.h> to get proper PI here, hopefully that's allowed.
-			
+		float Angle2D() {									
+																	// Assessment had confusing wording for this part, said it wants the angle around
+			float XYroot = sqrt(x * x + y * y);						// XY from 1,0 but early on it mentions that for 2D stuff x=forward and y=right.
+																	// Also i had to include <math.h> to get proper PI here, hopefully that's allowed.
 			return atan2(y / XYroot, x / XYroot) * (180 / M_PI);		
 		
 		}
@@ -297,7 +297,7 @@ namespace MathLibrary {
 			temp.x = x - op.x;
 			temp.y = y - op.y;
 			temp.z = z - op.z;
-			temp.w = w + op.w;
+			temp.w = w - op.w;
 
 			return temp;
 		}
@@ -308,7 +308,7 @@ namespace MathLibrary {
 			temp.x = x * op.x;
 			temp.y = y * op.y;
 			temp.z = z * op.z;
-			temp.w = w + op.w;
+			temp.w = w * op.w;
 
 			return temp;
 		}
@@ -319,6 +319,7 @@ namespace MathLibrary {
 			temp.x = x * op;
 			temp.y = y * op;
 			temp.z = z * op;
+			temp.w = w * op;
 
 			return temp;
 		}
@@ -329,6 +330,7 @@ namespace MathLibrary {
 			temp.x = x / op;
 			temp.y = y / op;
 			temp.z = z / op;
+			temp.w = w / op;
 
 			return temp;
 		}
@@ -358,7 +360,7 @@ namespace MathLibrary {
 			x -= op.x;
 			y -= op.y;
 			z -= op.z;
-			w += op.w;
+			w -= op.w;
 
 			return *this;
 		}
@@ -368,7 +370,7 @@ namespace MathLibrary {
 			x *= op.x;
 			y *= op.y;
 			z *= op.z;
-			w += op.w;
+			w *= op.w;
 
 			return *this;
 		}
@@ -378,6 +380,7 @@ namespace MathLibrary {
 			x *= op;
 			y *= op;
 			z *= op;
+			w *= op;
 
 			return *this;
 		}
@@ -387,6 +390,7 @@ namespace MathLibrary {
 			x /= op;
 			y /= op;
 			z /= op;
+			w /= op;
 
 			return *this;
 		}
@@ -396,6 +400,7 @@ namespace MathLibrary {
 			x *= -1;
 			y *= -1;
 			z *= -1;
+			w *= -1;
 
 			return *this;
 		}
@@ -412,11 +417,11 @@ namespace MathLibrary {
 
 			Vector4 temp1 = *this;
 			temp1 *= *this;
-			float mag1 = (temp1.x + temp1.y + temp1.z);				// Gets the XYZ values squared and added. The two magnitudes don't need to be
+			float mag1 = (temp1.x + temp1.y + temp1.z + temp1.w);	// Gets the XYZW values squared and added. The two magnitudes don't need to be
 																	// square-rooted back down because they are BOTH squared, their relationship
 			Vector4 temp2 = op;										// to eachother will be the same no matter what i multiply or divide them by.
 			temp2 *= op;
-			float mag2 = (temp2.x + temp2.y + temp2.z);
+			float mag2 = (temp2.x + temp2.y + temp2.z + temp2.w);
 
 			return (mag1 < mag2);
 		}
@@ -438,7 +443,7 @@ namespace MathLibrary {
 
 		Vector4 Cross(const Vector4& op) {
 
-			return {y * op.z - z * op.y, z * op.x - x * op.z, x * op.y - y * op.x, w + op.w};
+			return {y * op.z - z * op.y, z * op.x - x * op.z, x * op.y - y * op.x, w};
 
 		}
 
@@ -448,17 +453,17 @@ namespace MathLibrary {
 
 		}
 
-		void Normalise() {								// Not sure what the difference will be between this function
-														// and the one below, i'll hopefully find out as i go.
+		void Normalise() {
+		
 			*this / Magnitude();
 
 			return;
 
 		}
 
-		Vector4 Normalised() {				// These don't need an input because unlike regular functions, as members of structs they technically
-											// always have the object they are from fed into/accessible from within the function by default.
-			Vector4 temp = *this;
+		Vector4 Normalised() {				
+										// These don't need an input because unlike regular functions, as members of structs they technically	
+			Vector4 temp = *this;		// always have the object they are from fed into/accessible from within the function by default.
 
 			return temp / Magnitude();
 
@@ -482,17 +487,16 @@ namespace MathLibrary {
 
 		}
 
-
 	};
 
 	struct Matrix3 {
 
 		union {
 			struct {
-				float m1, m2, m3, m4, m5, m6, m7, m8, m9;					// I'm using this union so i can read these 9 floats in any format i want while
-			};																// still technically satisfying what the assessment wants from me, wholly separate
-			float arr[9];													// variables are super tedious to write code for, often for loops make the code
-			float grid[3][3];												// waayyy more compact and pleasant to read.
+				float m1, m2, m3, m4, m5, m6, m7, m8, m9;		// I'm using this union so i can read these 9 floats in any format i want while
+			};													// still technically satisfying what the assessment wants from me, wholly separate
+			float arr[9];										// variables are super tedious to write code for, often for loops make the code
+			float grid[3][3];									// waayyy more compact and pleasant to read.
 		};
 
 
@@ -515,7 +519,7 @@ namespace MathLibrary {
 
 			for (int i = 0; i < 9; i++) {		// This constructor takes a Matrix declaration with just 1 float
 												// and assumes the user wants to build the Matrix3 with all stored
-				arr[i] = ALL;					// floats being the same. Mostly just useful for   Matrix3.arr = 0;
+				arr[i] = ALL;					// floats being the same. Mostly just used for testing.
 
 			}
 
@@ -554,13 +558,13 @@ namespace MathLibrary {
 
 		}
 
-		Vector3 operator*(const Vector3& op) {
-
-			Vector3 temp;
-
-			temp.x = grid[0][0] * op.x + grid[0][1] * op.y + grid[0][2] * op.z;			// Still wrapping my head around this, so the vector's X must be multiplied
-			temp.y = grid[1][0] * op.x + grid[1][1] * op.y + grid[1][2] * op.z;			// by one of Matr's full vectors, M0x * Vx + M0y * Vx + M0z * Vx ? I'm not
-			temp.z = grid[2][0] * op.x + grid[2][1] * op.y + grid[2][2] * op.z;			// sure what this is for and need to look into it more.
+		Vector3 operator*(const Vector3& op) {			
+														// Still wrapping my head around this, so the vector's X must be multiplied
+			Vector3 temp;								// by one of Matr's full vectors, M0x * Vx + M0y * Vx + M0z * Vx ? I'm not
+														// sure what this is for and need to look into it more.
+			temp.x = grid[0][0] * op.x + grid[0][1] * op.y + grid[0][2] * op.z;		
+			temp.y = grid[1][0] * op.x + grid[1][1] * op.y + grid[1][2] * op.z;		
+			temp.z = grid[2][0] * op.x + grid[2][1] * op.y + grid[2][2] * op.z;		
 
 		return temp;
 		
@@ -570,8 +574,8 @@ namespace MathLibrary {
 		
 			Matrix3 temp = 0;
 
-			for (int A = 0; A < 3; A++) {
-				for (int B = 0; B < 3; B++) {
+			for (int A = 0; A < 3; A++) {						// A shmancy set of for loops i figured out after writing
+				for (int B = 0; B < 3; B++) {					// the order of operations up on the whiteboard a bunch.
 					for (int C = 0; C < 3; C++) {
 						temp.grid[A][B] += grid[A][C] * op.grid[C][B];
 					}
@@ -695,7 +699,7 @@ namespace MathLibrary {
 
 			for (int i = 0; i < 16; i++) {		// This constructor takes a Matrix declaration with just 1 float
 												// and assumes the user wants to build the Matrix4 with all stored
-				arr[i] = ALL;					// floats being the same. Mostly just useful for   Matrix4.arr = 0;
+				arr[i] = ALL;					// floats being the same. Mostly just useful for testing.
 
 			}
 
@@ -735,12 +739,12 @@ namespace MathLibrary {
 		}
 
 		Vector4 operator*(const Vector4& op) {
-
-			Vector4 temp;
-
-			temp.x = grid[0][0] * op.x + grid[0][1] * op.y + grid[0][2] * op.z + grid[0][3] * op.w;			// Still wrapping my head around this, so the vector's X must be multiplied
-			temp.y = grid[1][0] * op.x + grid[1][1] * op.y + grid[1][2] * op.z + grid[1][3] * op.w;			// by one of Matr's full vectors, M0x * Vx + M0y * Vx + M0z * Vx ? I'm not
-			temp.z = grid[2][0] * op.x + grid[2][1] * op.y + grid[2][2] * op.z + grid[2][3] * op.w;			// sure what this is for and need to look into it more.
+													// Still wrapping my head around this, so the vector's X must be multiplied
+			Vector4 temp;							// by one of Matr's full vectors, M0x * Vx + M0y * Vx + M0z * Vx ? I'm not
+													// sure what this is for and need to look into it more.
+			temp.x = grid[0][0] * op.x + grid[0][1] * op.y + grid[0][2] * op.z + grid[0][3] * op.w;			
+			temp.y = grid[1][0] * op.x + grid[1][1] * op.y + grid[1][2] * op.z + grid[1][3] * op.w;			
+			temp.z = grid[2][0] * op.x + grid[2][1] * op.y + grid[2][2] * op.z + grid[2][3] * op.w;			
 			temp.w = grid[3][0] * op.x + grid[3][1] * op.y + grid[3][2] * op.z + grid[3][3] * op.w;
 
 			return temp;
@@ -751,8 +755,8 @@ namespace MathLibrary {
 
 			Matrix4 temp = 0;
 
-			for (int A = 0; A < 4; A++) {
-				for (int B = 0; B < 4; B++) {
+			for (int A = 0; A < 4; A++) {				// A shmancy set of for loops i figured out after writing
+				for (int B = 0; B < 4; B++) {			// the order of operations up on the whiteboard a bunch.
 					for (int C = 0; C < 4; C++) {
 						temp.grid[A][B] += grid[A][C] * op.grid[C][B];
 					}
