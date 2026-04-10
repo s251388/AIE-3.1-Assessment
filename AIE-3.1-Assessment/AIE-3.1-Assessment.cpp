@@ -175,10 +175,9 @@ namespace MathLibrary {
 			return (mag1 < mag2);
 		}
 
-		float operator[](int i) {          // Originally i used switch cases but this felt more efficient, i make a temporary vector of the
-										   // current Vector3's XYZ values, then just use the input int to return the float at that index.
-			
-			float XYZ[3] {x,y,z};
+		float operator[](int i) {          
+											// Originally i used switch cases but this felt more efficient, i make a temporary vector of the
+			float XYZ[3] {x,y,z};			// current Vector3's XYZ values, then just use the input int to return the float at that index.
 			
 			return XYZ[i];
 
@@ -426,9 +425,9 @@ namespace MathLibrary {
 			return (mag1 < mag2);
 		}
 
-		float operator[](int i) {          // Originally i used switch cases but this felt more efficient, i make a temporary vector of the
-										   // current Vector4's XYZ values, then just use the input int to return the float at that index.
-			float XYZW[4] {x,y,z,w};
+		float operator[](int i) {          
+											// Originally i used switch cases but this felt more efficient, i make a temporary vector of the
+			float XYZW[4] {x,y,z,w};		// current Vector4's XYZ values, then just use the input int to return the float at that index.
 
 			return XYZW[i];
 
@@ -514,7 +513,7 @@ namespace MathLibrary {
 			}
 
 		}
-
+		
 		Matrix3(float ALL) {
 
 			for (int i = 0; i < 9; i++) {		// This constructor takes a Matrix declaration with just 1 float
@@ -574,8 +573,8 @@ namespace MathLibrary {
 		
 			Matrix3 temp = 0;
 
-			for (int A = 0; A < 3; A++) {						// A shmancy set of for loops i figured out after writing
-				for (int B = 0; B < 3; B++) {					// the order of operations up on the whiteboard a bunch.
+			for (int A = 0; A < 3; A++) {				// A shmancy set of for loops i figured out after manually writing the order of
+				for (int B = 0; B < 3; B++) {			// operations up on the whiteboard a bunch to see what changes with each process.
 					for (int C = 0; C < 3; C++) {
 						temp.grid[A][B] += grid[A][C] * op.grid[C][B];
 					}
